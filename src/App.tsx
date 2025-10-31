@@ -30,8 +30,14 @@ export default function App() {
 
   const goTo = useCallback(
     (path: string) => {
-      if (loc.pathname === path) return;
-      navigate(path);
+      if (loc.pathname !== path) {
+        navigate(path);
+      }
+      if (typeof window !== "undefined") {
+        window.setTimeout(() => {
+          window.location.assign(path);
+        }, 10);
+      }
     },
     [loc.pathname, navigate]
   );
