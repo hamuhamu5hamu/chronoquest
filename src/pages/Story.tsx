@@ -24,7 +24,7 @@ export default function StoryPage() {
 
   const story = useStory(userId);
   const { tasks, addTask } = useTasks(userId);
-  const { profile } = useProfile(userId);
+  const { profile } = useProfile();
   const { streak } = useStreak(userId);
   const { showToast } = useToast();
 

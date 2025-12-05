@@ -7,7 +7,7 @@ import { useToast } from "../components/ui/ToastProvider";
 export default function SettingsPage() {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id ?? null;
-  const { profile, loading: profileLoading, updateDisplayName, refetch } = useProfile(userId);
+  const { profile, loading: profileLoading, updateDisplayName, refetch } = useProfile();
   const { showToast } = useToast();
   const [displayName, setDisplayName] = useState("");
   const [saving, setSaving] = useState(false);

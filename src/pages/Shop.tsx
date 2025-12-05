@@ -24,7 +24,7 @@ const SLOT_LABELS: Record<string, string> = {
 export default function Shop() {
   const { user } = useAuth();
   const userId = user?.id ?? null;
-  const { profile, refetch } = useProfile(userId);
+  const { profile, refetch } = useProfile();
   const { items, inventory, loading, error, purchase } = useShop(userId);
   const {
     equipments,

@@ -40,7 +40,7 @@ export default function Today() {
   const userId = session?.user?.id ?? null;
 
   const { profile, loading: profLoading, error: profError, refetch, addXp, addCoins } =
-    useProfile(userId);
+    useProfile();
   const { tasks, loading: tasksLoading, addTask } = useTasks(userId);
   const counters = useDailyCounters(userId); // 回数カウンタ
   const achievementsState = useAchievements(userId);

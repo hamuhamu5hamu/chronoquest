@@ -1,5 +1,13 @@
 // src/hooks/useProfile.ts
-import { useCallback, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { supabase } from "../lib/supabaseClient";
 import { levelFromXp } from "../game/xp";
 
@@ -38,7 +46,7 @@ export const normalizeStats = (stats: any | null | undefined): ProfileStats => {
   return out;
 };
 
-export function useProfile(userId: string | null) {
+function useProfileState(userId: string | null) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState<string>("");
@@ -270,6 +278,39 @@ export function useProfile(userId: string | null) {
     addCoins,
     updateDisplayName,
   };
+  return {
+    profile,
+    loading,
+    error,
+    refetch,
+    allocateStat,
+    addXp,
+    addCoins,
+    updateDisplayName,
+  };
+}
+
+type ProfileContextValue = ReturnType<typeof useProfileState> & { userId: string | null };
+
+const ProfileContext = createContext<ProfileContextValue | null>(null);
+
+type ProfileProviderProps = {
+  userId: string | null;
+  children: ReactNode;
+};
+
+export function ProfileProvider({ userId, children }: ProfileProviderProps) {
+  const state = useProfileState(userId);
+  const value = useMemo<ProfileContextValue>(() => ({ ...state, userId }), [state, userId]);
+  return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
+}
+
+export function useProfile() {
+  const ctx = useContext(ProfileContext);
+  if (!ctx) {
+    throw new Error("useProfile must be used within ProfileProvider");
+  }
+  return ctx;
 }
 
 export const getProfileStats = (profile: Profile | null | undefined): ProfileStats =>

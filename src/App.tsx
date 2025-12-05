@@ -1,14 +1,10 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useMemo } from "react";
-import { useAuth } from "./auth/AuthProvider";
-import { useProfile } from "./hooks/useProfile";
+import { ProfileProvider, useProfile } from "./hooks/useProfile";
 import { xpProgress } from "./game/xp";
 
 export default function App() {
   const loc = useLocation();
   const navigate = useNavigate();
   const { session, loading } = useAuth();
-  const { profile } = useProfile(session?.user?.id ?? null);
 
   useEffect(() => {
     if (loading) return;
@@ -19,6 +15,28 @@ export default function App() {
       navigate("/", { replace: true });
     }
   }, [loading, session, loc, navigate]);
+
+  if (loading) {
+    return (
+      <div className="app">
+        <header className="app__header"><h1>ChronoQuest</h1></header>
+        <main className="app__content"><div className="card">Loading...</div></main>
+      </div>
+    );
+  }
+
+  return (
+    <ProfileProvider userId={session?.user?.id ?? null}>
+      <AppShell />
+    </ProfileProvider>
+  );
+}
+
+function AppShell() {
+  const loc = useLocation();
+  const navigate = useNavigate();
+  const { session } = useAuth();
+  const { profile } = useProfile();
 
   const title = useMemo(() => {
     if (loc.pathname === "/") return "ChronoQuest — Today";
@@ -41,15 +59,6 @@ export default function App() {
     },
     [loc.pathname, navigate]
   );
-
-  if (loading) {
-    return (
-      <div className="app">
-        <header className="app__header"><h1>ChronoQuest</h1></header>
-        <main className="app__content"><div className="card">Loading...</div></main>
-      </div>
-    );
-  }
 
   const totalXp = profile?.xp ?? 0;
   const level = xpProgress(totalXp).level;

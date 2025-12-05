@@ -15,7 +15,7 @@ export default function StatusPage() {
     loading: profileLoading,
     allocateStat,
     refetch,
-  } = useProfile(userId);
+  } = useProfile();
   const {
     equipments,
     ownedIds,
