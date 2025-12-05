@@ -268,6 +268,13 @@ function useProfileState(userId: string | null) {
     [userId, syncLevelIfNeeded]
   );
 
+  const updateLocalProfile = useCallback(
+    (updater: (prev: Profile | null) => Profile | null) => {
+      setProfile((prev) => updater(prev));
+    },
+    []
+  );
+
   return {
     profile,
     loading,
@@ -287,6 +294,7 @@ function useProfileState(userId: string | null) {
     addXp,
     addCoins,
     updateDisplayName,
+    updateLocalProfile,
   };
 }
 

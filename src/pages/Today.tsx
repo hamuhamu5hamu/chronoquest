@@ -39,8 +39,15 @@ export default function Today() {
   const { session } = useAuth();
   const userId = session?.user?.id ?? null;
 
-  const { profile, loading: profLoading, error: profError, refetch, addXp, addCoins } =
-    useProfile();
+  const {
+    profile,
+    loading: profLoading,
+    error: profError,
+    refetch,
+    addXp,
+    addCoins,
+    updateLocalProfile,
+  } = useProfile();
   const { tasks, loading: tasksLoading, addTask } = useTasks(userId);
   const counters = useDailyCounters(userId); // 回数カウンタ
   const achievementsState = useAchievements(userId);
@@ -610,6 +617,11 @@ export default function Today() {
               onClick={async () => {
                 try {
                   const result = await dailyReward.claim();
+                  if (result?.coins) {
+                    updateLocalProfile((prev) =>
+                      prev ? { ...prev, coins: (prev.coins ?? 0) + result.coins } : prev
+                    );
+                  }
                   await Promise.all([refetch(), refetchStreak(), dailyReward.refetch()]);
                   showToast(`デイリーボーナス獲得！コイン +${result?.coins ?? 50}`, {
                     variant: "success",
