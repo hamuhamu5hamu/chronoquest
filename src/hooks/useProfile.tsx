@@ -215,9 +215,10 @@ function useProfileState(userId: string | null) {
       }
       const synced = await syncLevelIfNeeded((data as Profile) ?? null);
       setProfile(synced);
+      await refetch();
       return synced;
     },
-    [userId, profile, syncLevelIfNeeded]
+    [userId, profile, syncLevelIfNeeded, refetch]
   );
 
   const addCoins = useCallback(
@@ -244,9 +245,10 @@ function useProfileState(userId: string | null) {
       }
       const synced = await syncLevelIfNeeded((data as Profile) ?? null);
       setProfile(synced);
+      await refetch();
       return synced;
     },
-    [userId, profile, syncLevelIfNeeded]
+    [userId, profile, syncLevelIfNeeded, refetch]
   );
 
   const updateDisplayName = useCallback(
