@@ -195,7 +195,7 @@ function useProfileState(userId: string | null) {
     async (amount: number) => {
       if (!userId) throw new Error("not logged in");
       if (!Number.isFinite(amount) || amount <= 0) return profile;
-      console.debug("[useProfile.addXp] start", { userId, amount });
+      console.log("[useProfile.addXp] start", { userId, amount });
       const { data: current, error: curErr } = await supabase
         .from("profiles")
         .select("xp")
@@ -216,9 +216,9 @@ function useProfileState(userId: string | null) {
       }
       const synced = await syncLevelIfNeeded((data as Profile) ?? null);
       setProfile(synced);
-      console.debug("[useProfile.addXp] updating profile via refetch", { userId });
+      console.log("[useProfile.addXp] updating profile via refetch", { userId });
       await refetch();
-      console.debug("[useProfile.addXp] completed refetch", { userId });
+      console.log("[useProfile.addXp] completed refetch", { userId });
       return synced;
     },
     [userId, profile, syncLevelIfNeeded, refetch]
@@ -228,7 +228,7 @@ function useProfileState(userId: string | null) {
     async (amount: number) => {
       if (!userId) throw new Error("not logged in");
       if (!Number.isFinite(amount) || amount <= 0) return profile;
-      console.debug("[useProfile.addCoins] start", { userId, amount });
+      console.log("[useProfile.addCoins] start", { userId, amount });
       const { data: current, error: curErr } = await supabase
         .from("profiles")
         .select("coins")
@@ -249,9 +249,9 @@ function useProfileState(userId: string | null) {
       }
       const synced = await syncLevelIfNeeded((data as Profile) ?? null);
       setProfile(synced);
-      console.debug("[useProfile.addCoins] updating profile via refetch", { userId });
+      console.log("[useProfile.addCoins] updating profile via refetch", { userId });
       await refetch();
-      console.debug("[useProfile.addCoins] completed refetch", { userId });
+      console.log("[useProfile.addCoins] completed refetch", { userId });
       return synced;
     },
     [userId, profile, syncLevelIfNeeded, refetch]
