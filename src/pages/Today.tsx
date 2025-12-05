@@ -427,6 +427,14 @@ export default function Today() {
       if (error) throw error;
       await fetchCompletionsToday();
       await fetchCompletionsEver();
+      updateLocalProfile((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          xp: (prev.xp ?? 0) + finalGain,
+          coins: (prev.coins ?? 0) + coinGain,
+        };
+      });
       if (bonusXp > 0) {
         try {
           await addXp(bonusXp);
